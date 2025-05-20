@@ -6,18 +6,15 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-/* Libraries */
-
+/* Libraries ---------------------------------------------------------------- */
 #include <stdio.h>
 #include <malloc.h>
 #include <ctype.h>
 
-/* Constant definitions */
-
+/* Constant definitions ------------------------------------------------------*/
 #define N 3
 
-/* Function declarations */
-
+/* Function declarations -----------------------------------------------------*/
 void Ex1();
 void Ex2();
 void Ex3();
@@ -27,14 +24,12 @@ void createFile(char* filename);
 char commonestLetter(char* filename);
 void decode(char* text);
 
-/* Declarations of auxiliary functions */
-
+/* Auxiliary declarations ----------------------------------------------------*/
 char* getStr(char* str, int startI, int endI);
-void printStringsArray(char** str_arr, int size);
-void freeMatrix(void** A, int rows);
+void  printStringsArray(char** str_arr, int size);
+void  freeMatrix(void** A, int rows);
 
-/* ------------------------------- */
-
+/* ------------------------------- MAIN ------------------------------------- */
 int main()
 {
 	int select = 0, i, all_Ex_in_loop = 0;
@@ -60,9 +55,13 @@ int main()
 	return 0;
 }
 
-
-/* Function definitions */
-
+/* -------------------------------------------------------------------------- */
+/* Ex1
+   ----
+   • Reads a full line from the user and a single letter.
+   • Uses split() to collect every word whose first character matches
+	 the given letter (case-insensitive).
+   • Prints those words, then frees the allocated memory.                     */
 void Ex1()
 {
 	char str[100];
@@ -76,9 +75,14 @@ void Ex1()
 	scanf_s("%c", &letter);
 	char** arr = split(letter, str, &size);
 	printStringsArray(arr, size);
-	freeMatrix(arr,size);
+	freeMatrix(arr, size);
 }
 
+/* -------------------------------------------------------------------------- */
+/* Ex2
+   ----
+   • Prompts the user to type arbitrary text that is saved into "input.txt".
+   • Scans that file and reports the most frequent alphabetic character.      */
 void Ex2()
 {
 	char* file = "input.txt";
@@ -87,13 +91,23 @@ void Ex2()
 	printf("The most common letter in the file is:%c\n", c);
 }
 
+/* -------------------------------------------------------------------------- */
+/* Ex3
+   ----
+   • Demonstrates decode() on a fixed encrypted sentence and prints the result.*/
 void Ex3()
 {
-	/* Called functions:
-		decode */
-		/* Write Code Here! */
+	char str[56] = "Btwlzx Dqqes Eq|pj2 Tjhvqujs Iqoqjy bpg Eqfxtx Xcwwtt";
+	decode(str);
+	printf("%s\n", str);
 }
 
+/* -------------------------------------------------------------------------- */
+/* split
+   -----
+   • Counts and extracts all words in 'str' whose first letter equals 'letter'.
+   • Returns a dynamically-allocated array of strings; *p_size holds its size.
+   • Two passes are performed: first to count matches, second to copy words.  */
 char** split(char letter, char* str, int* p_size)
 {
 	char** arr = NULL;
@@ -155,6 +169,12 @@ char** split(char letter, char* str, int* p_size)
 	return arr;
 }
 
+/* -------------------------------------------------------------------------- */
+/* createFile
+   ----------
+   • Opens/creates 'filename' for writing.
+   • Copies every character typed on stdin until EOF (Ctrl+Z / Ctrl+D).
+   • Currently omits newline characters to produce a single-line file.        */
 void createFile(char* filename) {
 	FILE* fp = fopen(filename, "w");
 	if (!fp)return;
@@ -166,15 +186,21 @@ void createFile(char* filename) {
 	}
 	fclose(fp);
 }
+
+/* -------------------------------------------------------------------------- */
+/* commonestLetter
+   ----------------
+   • Reads the file and counts occurrences of each letter (case-insensitive).
+   • Returns the most frequent letter as an uppercase char.
+   • If file is empty or unreadable, returns '\0'.                            */
 char commonestLetter(char* filename)
 {
 	FILE* fPtr = fopen(filename, "r");
 	if (!fPtr)
 	{
-	
 		return '\0';
 	}
-	
+
 	char c;
 	int count[26] = { 0 };
 	while ((c = fgetc(fPtr)) != EOF)
@@ -199,15 +225,33 @@ char commonestLetter(char* filename)
 	return common;
 }
 
+/* -------------------------------------------------------------------------- */
+/* decode
+   ------
+   • Progressive Caesar-shift decrypt: starting with shift=1, subtracts an
+	 increasing value from every non-space character.  Shift resets after a
+	 space, resulting in words being decoded independently.                    */
 void decode(char* text)
 {
-	/* Write Code Here! */
+	int decoder = 1;
+	int i = 0;
+	while (text[i] != '\0') {
+		if (!isspace(text[i])) {
+			char c = text[i] - decoder;
+			text[i] = c;
+			decoder++;
+		}
+		else {
+			decoder = 1;
+		}
+		i++;
+	}
 }
 
-/* Definitions of auxiliary functions */
-
-
-/* Write Definitions Here! */
+/* ---------------- Auxiliary utilities ------------------------------------- */
+/* getStr
+   -------
+   • Allocates and returns a new substring str[startI..endI] (inclusive).     */
 char* getStr(char* str, int startI, int endI) {
 	int size = (endI - startI + 2);
 	char* newStr = (char*)malloc(sizeof(char) * size);
@@ -219,12 +263,21 @@ char* getStr(char* str, int startI, int endI) {
 	newStr[i] = '\0';
 	return newStr;
 }
+
+/* printStringsArray
+   -----------------
+   • Prints each string in the array on its own line.                         */
 void printStringsArray(char** str_arr, int size) {
 	for (int i = 0; i < size; i++)
 	{
 		printf("%s\n", str_arr[i]);
 	}
 }
+
+/* freeMatrix
+   ----------
+   • Frees a 1-D array of pointers, each pointing to dynamically
+	 allocated memory (i.e., a "matrix" by rows).                             */
 void freeMatrix(void** A, int rows) {
 	for (int i = 0; i < rows; i++)
 	{
@@ -233,4 +286,4 @@ void freeMatrix(void** A, int rows) {
 	free(A);
 }
 
-/* ------------------- */
+/* -------------------------------------------------------------------------- */
