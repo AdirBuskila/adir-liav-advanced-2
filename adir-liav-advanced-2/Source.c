@@ -65,7 +65,7 @@ int main()
 
 void Ex1()
 {
-	char* str = { "Rony     Goodman got a good mark" };
+	char* str = { "Ronyyyy     Goodman got a good mark" };
 	int size = 0;
 	char letter = 'g';
 	char** arr = split(letter, str, &size);
