@@ -77,6 +77,7 @@ void Ex1()
 
 void Ex2()
 {
+	createFile("C:\\Users\\Adir\\Desktop\\Adir-Liav\\output.txt");
 	/* Called functions:
 		createFile, commonestLetter */
 		/* Write Code Here! */
@@ -132,7 +133,7 @@ char** split(char letter, char* str, int* p_size)
 	insideWord = 1;
 	while (str[endI] != '\0') {
 		if (insideWord) {
-			while (str[endI] != '\0'&& !isspace(str[endI + 1]))
+			while (str[endI] != '\0' && !isspace(str[endI + 1]))
 				endI++;
 
 			if (tolower(str[startI]) == letter) {
@@ -150,9 +151,16 @@ char** split(char letter, char* str, int* p_size)
 	return arr;
 }
 
-void createFile(char* filename)
-{
-	/* Write Code Here! */
+void createFile(char* filename) {
+	FILE* fp = fopen(filename, "w");
+	if (!fp)return;
+	char c;
+	printf("Enter text (Ctrl+Z then Enter to stop on Windows, or Ctrl+D on Linux/Mac):\n");
+	while ((c = fgetc(stdin)) != EOF) {
+		if (c != '\n')
+			fputc(c, fp);
+	}
+	fclose(fp);
 }
 char commonestLetter(char* filename)
 {
