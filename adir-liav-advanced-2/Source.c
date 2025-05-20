@@ -77,7 +77,9 @@ void Ex1()
 
 void Ex2()
 {
-	createFile("C:\\Users\\Adir\\Desktop\\Adir-Liav\\output.txt");
+	//createFile("Newfile");
+	char c = commonestLetter("C:/Users/Asi/source/repos/adir-liav-advanced-2/ex2.txt");
+	printf("\n%c\n", c);
 	/* Called functions:
 		createFile, commonestLetter */
 		/* Write Code Here! */
@@ -164,7 +166,35 @@ void createFile(char* filename) {
 }
 char commonestLetter(char* filename)
 {
-	/* Write Code Here! */
+	FILE* fPtr = fopen(filename, "r");
+	if (!fPtr)
+	{
+	
+		return '\0';
+	}
+	
+	char c;
+	int count[26] = { 0 };
+	while ((c = fgetc(fPtr)) != EOF)
+	{
+		if (isalpha(c))
+		{
+			int index = tolower(c) - 'a';
+			count[index]++;
+		}
+	}
+	int maxI = -1;
+	int max = -1;
+	for (int i = 0; i < 26; i++)
+	{
+		if (count[i] >= max) {
+			maxI = i;
+			max = count[i];
+		}
+	}
+	fclose(fPtr);
+	char common = maxI + 'A';
+	return common;
 }
 
 void decode(char* text)
