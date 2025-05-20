@@ -1,0 +1,3 @@
+d=AB+C-a/(b+c+a+bc)
+D=2-a-b
+c=6+d
