@@ -65,24 +65,26 @@ int main()
 
 void Ex1()
 {
-	char* str = { "Ronyyyy     Goodman got a good mark" };
+	char str[100];
 	int size = 0;
-	char letter = 'g';
+	char letter;
+	int ch;
+	while ((ch = getchar()) != '\n' && ch != EOF);
+	printf("Please enter your string:\n");
+	fgets(str, sizeof(str), stdin);
+	printf("Please enter your letter:\n");
+	scanf_s("%c", &letter);
 	char** arr = split(letter, str, &size);
 	printStringsArray(arr, size);
-	/* Called functions:
-		split, printStringsArray, freeMatrix */
-		/* Write Code Here! */
+	freeMatrix(arr,size);
 }
 
 void Ex2()
 {
-	//createFile("Newfile");
-	char c = commonestLetter("C:/Users/Asi/source/repos/adir-liav-advanced-2/ex2.txt");
-	printf("\n%c\n", c);
-	/* Called functions:
-		createFile, commonestLetter */
-		/* Write Code Here! */
+	char* file = "input.txt";
+	createFile(file);
+	char c = commonestLetter(file);
+	printf("The most common letter in the file is:%c\n", c);
 }
 
 void Ex3()
