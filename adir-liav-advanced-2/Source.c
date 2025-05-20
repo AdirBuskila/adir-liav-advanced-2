@@ -1,7 +1,7 @@
 /*
 	Assigned by:
-	Student1_Full_Name #ID
-	Student2_Full_Name #ID
+	Liav Weizman 324926898
+	Adir Buskila 209487727
 */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <malloc.h>
+#include <ctype.h>
 
 /* Constant definitions */
 
@@ -28,6 +29,7 @@ void decode(char* text);
 
 /* Declarations of auxiliary functions */
 
+char* getStr(char* str, int startI, int endI);
 void printStringsArray(char** str_arr, int size);
 void freeMatrix(void** A, int rows);
 
@@ -63,6 +65,11 @@ int main()
 
 void Ex1()
 {
+	char* str = { "Rony     Goodman got a good mark" };
+	int size = 0;
+	char letter = 'g';
+	char** arr = split(letter, str, &size);
+	printStringsArray(arr, size);
 	/* Called functions:
 		split, printStringsArray, freeMatrix */
 		/* Write Code Here! */
@@ -84,7 +91,63 @@ void Ex3()
 
 char** split(char letter, char* str, int* p_size)
 {
-	/* Write Code Here! */
+	char** arr = NULL;
+	int startI = 0, endI = 0;
+	int i = 0;
+	*p_size = 0;
+	int insideWord = 1;
+	int firstLetter = 1;
+
+	while (str[startI] != '\0') {
+		char c = str[startI];
+		// if we are inside a word, and its the first letter
+		if (insideWord && firstLetter) {
+			if (tolower(c) == letter) {
+				*p_size += 1;
+			}
+			firstLetter = 0;
+		}
+		// if we are inside a word and its not the first letter
+		if (insideWord && !firstLetter) {
+			while (str[startI] != '\0' && !isspace(str[startI]))
+				startI++;
+			insideWord = 0;
+		}
+		/// we are not inside the word
+		if (!insideWord && !firstLetter) {
+			while (str[startI] != '\0' && isspace(str[startI]))
+				startI++;
+			insideWord = 1;
+			firstLetter = 1;
+		}
+	}
+	arr = (char**)malloc(sizeof(char*) * (*p_size));
+
+	if (!arr) {
+		*p_size = 0;
+		return NULL;
+	}
+
+	startI = endI = 0;
+	insideWord = 1;
+	while (str[endI] != '\0') {
+		if (insideWord) {
+			while (str[endI] != '\0'&& !isspace(str[endI + 1]))
+				endI++;
+
+			if (tolower(str[startI]) == letter) {
+				arr[i++] = getStr(str, startI, endI);
+			}
+			insideWord = 0;
+			endI++;
+		}
+		else {
+			while (str[endI] != '\0' && isspace(str[endI])) endI++;
+			startI = endI;
+			insideWord = 1;
+		}
+	}
+	return arr;
 }
 
 void createFile(char* filename)
@@ -103,6 +166,31 @@ void decode(char* text)
 
 /* Definitions of auxiliary functions */
 
+
 /* Write Definitions Here! */
+char* getStr(char* str, int startI, int endI) {
+	int size = (endI - startI + 2);
+	char* newStr = (char*)malloc(sizeof(char) * size);
+	int i = 0;
+	if (!newStr) return NULL;
+	while (startI <= endI) {
+		newStr[i++] = str[startI++];
+	}
+	newStr[i] = '\0';
+	return newStr;
+}
+void printStringsArray(char** str_arr, int size) {
+	for (int i = 0; i < size; i++)
+	{
+		printf("%s\n", str_arr[i]);
+	}
+}
+void freeMatrix(void** A, int rows) {
+	for (int i = 0; i < rows; i++)
+	{
+		free(A[i]);
+	}
+	free(A);
+}
 
 /* ------------------- */
